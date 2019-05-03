@@ -2,6 +2,16 @@ class PostsController < ApplicationController
   def index
   end
 
+
+  def index
+  # 記事一覧用
+  @posts = Post.all
+  # 最新記事用
+  @new_posts = Post.all
+  @author = Author.first
+  end
+
+
   def show 
     @post = Post.find(params[:id])
   end
