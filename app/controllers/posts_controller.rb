@@ -35,7 +35,7 @@ class PostsController < ApplicationController
   end
 
   def update
-    #一件データを取得]
+    #一件データを取得
     @post = Post.find(params[:id])
     #updateメソッドを使用
     @post.update(post_params)
@@ -46,6 +46,12 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    # 対象データを1件取得する
+    @post = Post.find(params[:id])
+    # デストロイアクションで消す
+    @post.destroy
+    # 一覧ページにリダイレクト
+    redirect_to posts_path
   end
 
 
