@@ -6,7 +6,7 @@ class PostsController < ApplicationController
     # 記事一覧用
     @q = Post.order(created_at: :desc).ransack(params[:q])
     @posts = @q.result.page(params[:page]).per(5)
-    @new_posts = Post.order(created_at: :desc).limit(5)
+    @new_posts = Post.find_newest_article
     # 最新記事用
     
     @author = Author.first
