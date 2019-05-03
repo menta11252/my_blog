@@ -1,19 +1,19 @@
 class PostsController < ApplicationController
-  def index
-  end
+  before_action :set_post, only: [ :show, :edit, :update, :destroy]
+  
 
-
   def index
-  # 記事一覧用
-  @posts = Post.all
-  # 最新記事用
-  @new_posts = Post.all
-  @author = Author.first
+    # 記事一覧用
+    @q = Post.order(created_at: :desc).ransack(params[:q])
+    @posts = @q.result.page(params[:page]).per(5)
+    @new_posts = Post.order(created_at: :desc).limit(5)
+    # 最新記事用
+    
+    @author = Author.first
   end
 
 
   def show 
-    @post = Post.find(params[:id])
   end
 
   def new
@@ -25,29 +25,23 @@ class PostsController < ApplicationController
     # Postモデルのインスタンスを生成(ストロングパラメータでデータを取得)
     # saveする
     # showページにリダイレクト
-    @post =  Post.new(post_params)
+    @post = Post.new(post_params)
     @post.save
     redirect_to @post
   end
 
   def edit
-    @post = Post.find(params[:id])
   end
 
   def update
     #一件データを取得
-    @post = Post.find(params[:id])
     #updateメソッドを使用
     @post.update(post_params)
     #詳細画面にリダイレクト
     redirect_to @post
-
-
   end
 
   def destroy
-    # 対象データを1件取得する
-    @post = Post.find(params[:id])
     # デストロイアクションで消す
     @post.destroy
     # 一覧ページにリダイレクト
@@ -60,5 +54,10 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :body, :category)
+  end
+
+
+  def set_post
+    @post = Post.find(params[:id])
   end
 end
